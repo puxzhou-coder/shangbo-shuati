@@ -1250,7 +1250,7 @@ function pullFromCloud(){
           questionBank.push({...q, cat:'📝 自定义题库', id:90000+i, _customIdx:i});
         }
       });
-      render();
+      if(currentScreen==='home') render();
     } else if(localTime > cloudTime){
       pushToCloud(appData);
     }
