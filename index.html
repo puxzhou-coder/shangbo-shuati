@@ -1212,9 +1212,10 @@ function pushToCloud(d){
   }
   ref.set(cloudData).then(function(){
     syncStatus='ok';
-    if(currentScreen==='home') render();
+    updateSyncDot();
   }).catch(function(e){
     syncStatus='error';
+    updateSyncDot();
     console.warn('Cloud sync failed:', e.message);
   });
 }
@@ -1250,11 +1251,20 @@ function pullFromCloud(){
           questionBank.push({...q, cat:'📝 自定义题库', id:90000+i, _customIdx:i});
         }
       });
-      if(currentScreen==='home') render();
+      /* data merged silently */
     } else if(localTime > cloudTime){
       pushToCloud(appData);
     }
   }).catch(function(e){ console.warn('Cloud pull failed:', e.message); });
+}
+
+function updateSyncDot(){
+  var dot=document.querySelector('.sync-dot');
+  if(dot){
+    dot.className='sync-dot sync-'+syncStatus;
+    var text=dot.parentElement;
+    if(text) text.childNodes[text.childNodes.length-1].textContent={ok:'云端已同步',pending:'正在同步...',error:'同步失败'}[syncStatus];
+  }
 }
 
 function saveToLocal(d){ localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
