@@ -1477,7 +1477,7 @@ function renderHome(){
     <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="exportData()">📤 导出数据</button>
     <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-    <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="resetAll()">🔄 重置</button>
+    <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="alert('进入任意章节 → 点击底部「📊 答题卡」→ 看到题目网格后，右上角有「🔄 重置本章」按钮')">🔄 如何重置</button>
   </div>
   <div class="card"><h3>📂 章节练习</h3>`;
   cats.forEach(cat=>{
@@ -1845,9 +1845,10 @@ function renderWrong(){
 
 function openWrongQuiz(id){
   quizSource='wrong';
+  let wrongIds=Object.keys(appData.wrongSet).map(Number);
+  quizOrder=wrongIds;
   let q=questionBank.find(q=>q.id===id);
-  currentCat=q.cat;
-  quizOrder=[...questionBank.filter(qq=>qq.cat===q.cat).map(qq=>qq.id)];
+  currentCat=q?q.cat:'';
   currentQIdx=quizOrder.indexOf(id);
   if(currentQIdx<0)currentQIdx=0;
   renderQuiz();
@@ -1897,9 +1898,10 @@ function renderFavorites(){
 
 function openFavQuiz(id){
   quizSource='favorites';
+  let favIds=Object.keys(appData.favorites).map(Number);
+  quizOrder=favIds;
   let q=questionBank.find(q=>q.id===id);
-  currentCat=q.cat;
-  quizOrder=[...questionBank.filter(qq=>qq.cat===q.cat).map(qq=>qq.id)];
+  currentCat=q?q.cat:'';
   currentQIdx=quizOrder.indexOf(id);
   if(currentQIdx<0)currentQIdx=0;
   renderQuiz();
@@ -1912,6 +1914,18 @@ function goBackFromQuiz(){
 }
 
 // ===== RESET =====
+function resetCategory(){
+  if(!confirm('确定要清空「'+currentCat+'」章节的所有做题记录和错题吗？收藏不受影响。'))return;
+  let ids=questionBank.filter(function(q){return q.cat===currentCat;}).map(function(q){return q.id;});
+  ids.forEach(function(id){
+    delete appData.answers[id];
+    delete appData.wrongSet[id];
+    delete appData.multiConfirmed[id];
+  });
+  saveData(appData);
+  render();
+}
+
 function resetAll(){
   if(confirm('确定要重置所有做题记录和错题本吗？此操作不可恢复。')){
     appData={answers:{},favorites:{},wrongSet:{},multiConfirmed:{}};
