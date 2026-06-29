@@ -1618,8 +1618,6 @@ function selectAnswer(i){
     // check correctness for wrong set
     if(!isCorrect(q,i)){
       appData.wrongSet[q.id]=true;
-    }else{
-      delete appData.wrongSet[q.id];
     }
     saveData(appData);
     renderQuiz();
@@ -1637,8 +1635,6 @@ function confirmMultiAnswer(){
   appData.multiConfirmed[q.id]=true;
   if(!isCorrect(q,userAns)){
     appData.wrongSet[q.id]=true;
-  }else{
-    delete appData.wrongSet[q.id];
   }
   saveData(appData);
   renderQuiz();
@@ -1860,6 +1856,9 @@ function openWrongQuiz(id){
 function redoWrong(){
   quizSource='wrong';
   let wrongIds=Object.keys(appData.wrongSet).map(Number);
+  // 清空错题的旧答案，重新开始
+  wrongIds.forEach(function(id){ delete appData.answers[id]; delete appData.multiConfirmed[id]; });
+  saveData(appData);
   quizOrder=wrongIds;
   let firstQ=questionBank.find(q=>q.id===quizOrder[0]);
   currentCat=firstQ?firstQ.cat:'';
