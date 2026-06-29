@@ -1477,7 +1477,7 @@ function renderHome(){
     <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="exportData()">📤 导出数据</button>
     <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-    <button class="btn btn-outline btn-sm" style="color:var(--sub);font-size:11px" onclick="alert('进入任意章节 → 点击底部「📊 答题卡」→ 看到题目网格后，右上角有「🔄 重置本章」按钮')">🔄 如何重置</button>
+    
   </div>
   <div class="card"><h3>📂 章节练习</h3>`;
   cats.forEach(cat=>{
@@ -1518,6 +1518,9 @@ function renderCategory(){
   <div class="btn-row mb-12">
     <button class="btn btn-primary" onclick="startCatQuiz()">▶ 顺序练习</button>
     <button class="btn btn-outline" onclick="startCatRandom()">🎲 随机练习</button>
+  </div>
+  <div style="text-align:center;margin-bottom:8px">
+    <button class="btn btn-outline btn-sm" style="color:var(--accent);font-size:11px;border-color:var(--accent)" onclick="resetCategory()">🔄 重置本章记录</button>
   </div>
   <div class="answer-grid">`;
   qs.forEach((q,i)=>{
