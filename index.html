@@ -1850,6 +1850,17 @@ function openCategory(cat){
   renderCategory();
 }
 
+function resetCategory(){
+  if(!confirm(`确定要重置「${currentCat}」的所有做题记录吗？\n\n这将清除该章节的答案和错题记录，收藏和笔记不受影响。`))return;
+  let qs=questionBank.filter(q=>q.cat===currentCat);
+  qs.forEach(q=>{
+    delete appData.answers[q.id];
+    if(appData.wrongSet)delete appData.wrongSet[q.id];
+    if(appData.multiConfirmed)delete appData.multiConfirmed[q.id];
+  });
+  saveData();
+  render();
+}
 function renderCategory(){
   let qs=questionBank.filter(q=>q.cat===currentCat);
   let p=getCatProgress(currentCat);
@@ -1864,6 +1875,10 @@ function renderCategory(){
     <button class="btn btn-primary" onclick="startCatQuiz()">▶ 顺序练习</button>
     <button class="btn btn-outline" onclick="startCatRandom()">🎲 随机练习</button>
   </div>
+
+	  <div class="btn-row mb-12">
+	    <button class="btn btn-outline btn-sm" style="color:var(--accent)" onclick="resetCategory()">🔄 重置本章节</button>
+	  </div>
   <div class="answer-grid">`;
   qs.forEach((q,i)=>{
     let cls='answer-dot';
