@@ -2045,7 +2045,7 @@ function renderCategory(){
 let quizOrder=[];
 function startCatQuiz(){quizSource='category';quizOrder=[...questionBank.filter(q=>q.cat===currentCat).map(q=>q.id)];currentQIdx=0;renderQuiz();}
 function startCatRandom(){quizSource='category';quizOrder=[...questionBank.filter(q=>q.cat===currentCat)].sort(()=>Math.random()-.5).map(q=>q.id);currentQIdx=0;renderQuiz();}
-function openQuiz(idx){quizSource='category';quizOrder=[...questionBank.filter(q=>q.cat===currentCat).map(q=>q.id)];currentQIdx=idx;renderQuiz();}
+function openQuiz(idx){currentQIdx=idx;renderQuiz();}
 
 function getCurrentQuizQuestion(){return questionBank.find(q=>q.id===quizOrder[currentQIdx]);}
 function isMultiConfirmed(qid){return appData.multiConfirmed&&appData.multiConfirmed[qid];}
@@ -2357,7 +2357,7 @@ function openWrongQuiz(id){
   quizSource='wrong';
   let q=questionBank.find(q=>q.id===id);
   currentCat=q.cat;
-  quizOrder=[...questionBank.filter(qq=>qq.cat===q.cat).map(qq=>qq.id)];
+  quizOrder=Object.keys(appData.wrongSet).map(Number);
   currentQIdx=quizOrder.indexOf(id);
   if(currentQIdx<0)currentQIdx=0;
   renderQuiz();
@@ -2409,7 +2409,7 @@ function openFavQuiz(id){
   quizSource='favorites';
   let q=questionBank.find(q=>q.id===id);
   currentCat=q.cat;
-  quizOrder=[...questionBank.filter(qq=>qq.cat===q.cat).map(qq=>qq.id)];
+  quizOrder=Object.keys(appData.favorites).map(Number);
   currentQIdx=quizOrder.indexOf(id);
   if(currentQIdx<0)currentQIdx=0;
   renderQuiz();
