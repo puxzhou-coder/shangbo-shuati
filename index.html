@@ -2045,7 +2045,7 @@ function renderCategory(){
 let quizOrder=[];
 function startCatQuiz(){quizSource='category';quizOrder=[...questionBank.filter(q=>q.cat===currentCat).map(q=>q.id)];currentQIdx=0;renderQuiz();}
 function startCatRandom(){quizSource='category';quizOrder=[...questionBank.filter(q=>q.cat===currentCat)].sort(()=>Math.random()-.5).map(q=>q.id);currentQIdx=0;renderQuiz();}
-function openQuiz(idx){currentQIdx=idx;renderQuiz();}
+function openQuiz(idx){if(quizSource==='category'){quizOrder=[...questionBank.filter(q=>q.cat===currentCat).map(q=>q.id)];}currentQIdx=idx;renderQuiz();}
 
 function getCurrentQuizQuestion(){return questionBank.find(q=>q.id===quizOrder[currentQIdx]);}
 function isMultiConfirmed(qid){return appData.multiConfirmed&&appData.multiConfirmed[qid];}
@@ -2366,6 +2366,11 @@ function openWrongQuiz(id){
 function redoWrong(){
   quizSource='wrong';
   let wrongIds=Object.keys(appData.wrongSet).map(Number);
+  wrongIds.forEach(id=>{
+    delete appData.answers[id];
+    if(appData.multiConfirmed)delete appData.multiConfirmed[id];
+  });
+  saveData();
   quizOrder=wrongIds;
   let firstQ=questionBank.find(q=>q.id===quizOrder[0]);
   currentCat=firstQ?firstQ.cat:'';
